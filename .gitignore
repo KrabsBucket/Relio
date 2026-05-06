@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+credentials.json
+token.json
+
+# Database
+db/
+
+# Recordings & generated data
+data/recordings/
+
+# Obsidian vault (user-specific)
+vault/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Electron
+dist/
+out/
+*.asar
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build
+build/

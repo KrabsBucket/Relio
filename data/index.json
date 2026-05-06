@@ -1,0 +1,10 @@
+{
+  "files": [
+    {
+      "path": "finance/TCS_quarterly_results.csv",
+      "description": "TCS Quarterly Financial Results FY24-FY25",
+      "tags": ["tcs", "quarterly", "finance", "revenue", "profit"]
+    }
+  ],
+  "lastUpdated": "2026-05-05"
+}

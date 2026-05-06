@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrismClaw — AI Meeting Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ Sidebar ═══ -->
+  <aside id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/><polyline points="2 15.5 12 8.5 22 15.5"/></svg>
+      </div>
+      <span class="logo-text">PrismClaw</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-panel="dashboard" id="nav-dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-btn" data-panel="record" id="nav-record">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        Record
+      </button>
+      <button class="nav-btn" data-panel="history" id="nav-history">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Past Meets
+      </button>
+      <button class="nav-btn" data-panel="notes" id="nav-notes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Notes
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="datetime-display" id="sidebar-datetime"></div>
+      <div class="status-dot"><span class="dot"></span> System Online</div>
+      <button class="nav-btn nav-btn-sm" id="btn-test-telegram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+        Test Telegram
+      </button>
+      <div class="hotkey-hint">
+        <kbd>Ctrl+Shift+M</kbd> Meeting<br>
+        <kbd>Ctrl+Shift+R</kbd> Context · <kbd>Ctrl+Shift+Q</kbd> Search
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ Main Content ═══ -->
+  <main id="main-content">
+
+    <!-- DASHBOARD -->
+    <section class="panel active" id="panel-dashboard">
+      <div class="greeting-banner" id="greeting-banner">
+        <span class="greeting-text" id="greeting-text"></span>
+        <span class="greeting-sub" id="greeting-sub"></span>
+      </div>
+      <div class="panel-grid">
+        <!-- Upcoming Events -->
+        <div class="card card-events">
+          <div class="card-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Upcoming Events
+            </h2>
+            <div class="card-actions">
+              <button class="btn btn-sm btn-brief" id="btn-prep-meeting" title="Prepare for next meeting">Prep</button>
+              <button class="btn-icon" id="btn-refresh-events" title="Refresh">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="card-body" id="events-list">
+            <div class="loading-skeleton">Loading events...</div>
+          </div>
+        </div>
+
+        <!-- Stats + Chart -->
+        <div class="card card-graph">
+          <div class="card-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Productivity
+            </h2>
+            <div id="stats-badges" class="stats-badges"></div>
+          </div>
+          <div class="card-body" style="padding:8px 14px">
+            <canvas id="meetings-chart" height="160"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Notes -->
+        <div class="card card-recent-notes">
+          <div class="card-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Recent Notes
+            </h2>
+          </div>
+          <div class="card-body" id="recent-notes-list">
+            <div class="loading-skeleton">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECORD -->
+    <section class="panel" id="panel-record">
+      <div class="record-container">
+        <div class="record-header">
+          <div class="record-status">
+            <span class="record-dot"></span>
+            <span class="record-label">Ready to Record</span>
+            <span class="badge badge-live" id="badge-live" style="display:none">● Live</span>
+            <span class="badge badge-duration" id="badge-duration" style="display:none">00:00</span>
+          </div>
+          <div class="record-controls">
+            <input type="text" class="input-title" id="meeting-title" placeholder="Meeting title..." />
+            <button class="btn btn-brief btn-sm" id="btn-pre-brief" title="Get pre-meeting brief">Prep</button>
+            <button class="btn btn-record" id="btn-record"><span>Start Meeting</span></button>
+            <!-- Mic Volume Visualizer -->
+            <div class="mic-viz" id="mic-viz" title="Microphone level">
+              <svg viewBox="0 0 24 32" width="24" height="32">
+                <defs>
+                  <clipPath id="mic-clip">
+                    <path d="M12 1a4 4 0 0 0-4 4v8a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/>
+                    <path d="M19 11v2a7 7 0 0 1-14 0v-2" fill="none"/>
+                    <rect x="11" y="20" width="2" height="5"/>
+                    <rect x="8" y="25" width="8" height="2" rx="1"/>
+                  </clipPath>
+                </defs>
+                <!-- Outline -->
+                <path d="M12 1a4 4 0 0 0-4 4v8a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                <path d="M19 11v2a7 7 0 0 1-14 0v-2" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                <line x1="12" y1="20" x2="12" y2="25" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+                <line x1="8" y1="25" x2="16" y2="25" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round"/>
+                <!-- Fill that rises with volume -->
+                <rect id="mic-fill" x="0" y="32" width="24" height="32" fill="white" clip-path="url(#mic-clip)" opacity="0.9"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pre-meeting Brief -->
+        <div class="card card-brief" id="card-brief" style="display:none;max-height:200px">
+          <div class="card-header"><h2>📋 Pre-Meeting Brief</h2></div>
+          <div class="card-body" id="brief-content"></div>
+        </div>
+
+        <!-- Live Context (Ctrl+Shift+R) -->
+        <div class="card" id="card-context" style="display:none;max-height:180px;border-color:rgba(103,232,249,0.15)">
+          <div class="card-header"><h2>⚡ Real-time Context</h2></div>
+          <div class="card-body" id="context-content" style="font-size:12px;line-height:1.7"></div>
+        </div>
+
+        <!-- Transcript -->
+        <div class="card card-transcript" style="flex:1;min-height:0">
+          <div class="card-header"><h2>Live Transcript</h2></div>
+          <div class="card-body transcript-body" id="transcript-area">
+            <div class="empty-state">Press <kbd>Ctrl+Shift+M</kbd> or click "Start Meeting" to begin recording.</div>
+          </div>
+        </div>
+
+        <!-- Generated Notes -->
+        <div class="card card-generated-notes" id="card-gen-notes" style="display:none">
+          <div class="card-header">
+            <h2>Meeting Notes</h2>
+            <div class="card-actions">
+              <span class="rating-display" id="rating-display"></span>
+              <button class="btn btn-save btn-sm" id="btn-save-meeting">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+                Save & Send
+              </button>
+            </div>
+          </div>
+          <div class="card-body notes-body" id="generated-notes-content"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAST MEETINGS (HISTORY) -->
+    <section class="panel" id="panel-history">
+      <div class="history-container">
+        <div class="history-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Past Meetings
+          </h2>
+          <div class="history-stats" id="history-stats"></div>
+        </div>
+        <div class="history-list" id="history-list">
+          <div class="loading-skeleton">Loading meeting history...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTES (full view) -->
+    <section class="panel" id="panel-notes">
+      <div class="card" style="height:100%">
+        <div class="card-header"><h2>All Meeting Notes</h2></div>
+        <div class="card-body" id="notes-history-list">
+          <div class="loading-skeleton">Loading...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Search Overlay (Ctrl+Shift+Q) -->
+<div class="search-overlay" id="search-overlay" style="display:none">
+  <div class="search-backdrop" id="search-backdrop"></div>
+  <div class="search-modal">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="search-input" placeholder="Search vault & data..." autocomplete="off" />
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search-results" id="search-results" style="display:none">
+      <div class="search-results-files" id="search-files"></div>
+      <div class="search-results-analysis" id="search-analysis"></div>
+      <div class="search-results-graph" id="search-graph"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
