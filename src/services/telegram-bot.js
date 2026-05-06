@@ -88,7 +88,7 @@ async function sendMeetingNotes(meetingTitle, notes, durationSecs = 0) {
     lines.push('');
   }
 
-  lines.push('— PrismClaw AI');
+  lines.push('— Relio AI');
 
   const message = lines.join('\n');
 

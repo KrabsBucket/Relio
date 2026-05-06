@@ -1,4 +1,4 @@
-# PrismClaw AI Meeting Assistant
+# Relio — AI Meeting Assistant
 
 ## Problem
 
@@ -6,7 +6,7 @@ Meeting context is lost the moment a call ends. Notes are incomplete, action ite
 
 ## Solution
 
-PrismClaw is a local-first, privacy-conscious AI meeting assistant built on Electron. It records meetings, transcribes audio using Groq Whisper, generates structured notes with AI (Gemini + Groq Llama fallback), extracts dates and action items, pushes events to Google Calendar, saves notes to an Obsidian vault, and sends compact summaries to Telegram. Everything runs on your machine with free-tier APIs.
+Relio is a local-first, privacy-conscious AI meeting assistant built on Electron. It records meetings, transcribes audio using Groq Whisper, generates structured notes with AI (Gemini + Groq Llama fallback), extracts dates and action items, pushes events to Google Calendar, saves notes to an Obsidian vault, and sends compact summaries to Telegram. Everything runs on your machine with free-tier APIs.
 
 The workflow is hotkey-driven:
 
@@ -27,7 +27,7 @@ Electron Main Process
         +-- Telegram Bot API (compact meeting summaries)
         +-- SQLite via sql.js (meeting history, in-memory + persistence)
         +-- Obsidian vault (markdown note export)
-        +-- Context Engine (OpenClaw identity + vault knowledge)
+        +-- Context Engine (identity + vault knowledge)
 ```
 
 All AI calls go through `safeGenerate()` which tries Gemini first and automatically falls back to Groq Llama on 429/503 errors. Transcription uses Groq Whisper as primary with Gemini STT as fallback.
@@ -42,14 +42,13 @@ All AI calls go through `safeGenerate()` which tries Gemini first and automatica
 | `src/renderer/index.html` | Application shell and UI components. |
 | `src/renderer/index.css` | Dark theme styling with glassmorphism and micro-animations. |
 | `src/services/gemini-client.js` | Multi-model AI client with Groq Llama fallback. |
-| `src/services/whisper-service.js` | Groq Whisper transcription service (free tier). |
+| `src/services/whisper-service.js` | Groq Whisper transcription service. |
 | `src/services/telegram-bot.js` | Compact, formal Telegram meeting notifications. |
 | `src/services/calendar-sync.js` | Google Calendar OAuth2 authentication and event injection. |
-| `src/services/context-engine.js` | Context assembly from OpenClaw identity, vault, and meeting history. |
+| `src/services/context-engine.js` | Context assembly from identity, vault, and meeting history. |
 | `src/services/vault-search.js` | Local file search across the data/ directory. |
 | `src/services/db.js` | SQLite database for meeting persistence and stats. |
 | `data/` | CSV, JSON, and other data files for search queries. |
-| `db/` | SQLite database file (auto-created). |
 
 Private runtime state is ignored by git, including `.env`, `credentials.json`, `token.json`, database files, recordings, and vault contents.
 
@@ -69,7 +68,7 @@ Private runtime state is ignored by git, including `.env`, `credentials.json`, `
 - Smart auto-title extraction from notes.
 - Context-aware: references past meetings, ongoing projects, and user profile.
 
-### Post-Meeting Pipeline
+### Post-Meeting Automation
 
 After recording stops, the system automatically:
 
@@ -93,13 +92,11 @@ After recording stops, the system automatically:
 - Searches local `data/` directory for matching files.
 - AI-powered analysis of search results.
 - Automatic chart/graph generation from CSV data.
-- Knowledge graph visualization.
 
 ### Daily Digest
 
 - 8 AM Telegram digest with today's calendar events.
 - Meeting stats (total meetings, average rating, weekly count).
-- Works with or without Google Calendar auth.
 
 ### Resilience
 
@@ -115,15 +112,15 @@ After recording stops, the system automatically:
 | AI Tasks (Notes, Context, Search, Dates) | `gemini-2.5-flash-lite` (Google) | `llama-3.3-70b-versatile` (Groq) |
 | Audio Transcription | `whisper-large-v3-turbo` (Groq) | Gemini STT |
 
-Both providers are free tier. Groq provides generous limits: 7,000 audio-seconds/day for Whisper, 6,000 tokens/min for Llama.
+Both providers are free tier.
 
 ## Setup
 
 1. Clone and enter the repository.
 
 ```bash
-git clone https://github.com/divyesamdani/PrismClaw.git
-cd PrismClaw
+git clone https://github.com/KrabsBucket/Relio.git
+cd Relio
 ```
 
 2. Install dependencies.
@@ -141,20 +138,11 @@ cp .env.example .env
 4. Fill `.env`.
 
 ```bash
-# Gemini API (primary AI — https://aistudio.google.com/apikey)
-GEMINI_API_KEY=
-
-# Groq API (FREE Whisper + Llama fallback — https://console.groq.com)
-GROQ_API_KEY=
-
-# Telegram Bot (https://t.me/BotFather)
-TELEGRAM_BOT_TOKEN=
+GEMINI_API_KEY=       # https://aistudio.google.com/apikey
+GROQ_API_KEY=         # https://console.groq.com
+TELEGRAM_BOT_TOKEN=   # https://t.me/BotFather
 TELEGRAM_CHAT_ID=
-
-# User identity
 USER_NAME=YourName
-
-# Browser for OAuth
 OAUTH_BROWSER=start
 ```
 
@@ -172,7 +160,7 @@ OAUTH_BROWSER=start
 npm start
 ```
 
-## Keyboard Shortcuts
+## Usage
 
 | Shortcut | Action |
 | --- | --- |
@@ -190,13 +178,28 @@ npm start
 | Telegram | Free | [t.me/BotFather](https://t.me/BotFather) |
 | Google Calendar | Free | [console.cloud.google.com](https://console.cloud.google.com) |
 
+## AI Disclosure
+
+This project uses the following AI tools and models:
+
+- **Google Gemini 2.5 Flash Lite** — Primary AI for generating meeting notes, extracting dates, real-time context analysis, search result interpretation, and pre-meeting briefs.
+- **Groq Whisper Large V3 Turbo** — Audio transcription engine. Converts recorded meeting audio (WebM) into text via Groq's free API.
+- **Groq Llama 3.3 70B** — Automatic fallback AI when Gemini is rate-limited (429) or unavailable (503). Handles all the same tasks as Gemini.
+- **Obsidian** — Meeting notes are exported as Obsidian-compatible Markdown files to a local vault for long-term knowledge management.
+
+All AI processing uses free-tier API keys. No audio or text data is stored on third-party servers beyond the API call duration.
+
 ## Tech Stack
 
-- **Runtime**: Electron 35 + Node.js 22
-- **Database**: SQLite via sql.js (in-memory with disk persistence)
+- **Runtime**: Electron + Node.js
+- **Database**: SQLite via sql.js
 - **AI**: Google Gemini + Groq Llama + Groq Whisper
 - **Notifications**: Telegram Bot API
 - **Calendar**: Google Calendar API (OAuth2)
 - **Notes Export**: Obsidian-compatible Markdown
 - **Audio**: MediaRecorder API (WebM/Opus)
 - **UI**: Vanilla HTML/CSS/JS with glassmorphism dark theme
+
+## Team
+
+**Relio** — Built by Team Relio

@@ -1,7 +1,7 @@
 {
-  "name": "prismclaw",
+  "name": "relio",
   "version": "1.0.0",
-  "description": "AI Meeting Assistant — Live STT, Smart Notes, Calendar & Telegram",
+  "description": "Relio — AI Meeting Assistant with Live Transcription, Smart Notes, Calendar & Telegram",
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",

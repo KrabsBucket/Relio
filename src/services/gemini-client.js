@@ -1,4 +1,4 @@
-// PrismClaw — Multi-Model AI Client
+// Relio — Multi-Model AI Client
 // Primary: Gemini 2.5 Flash Lite | Fallback: Groq Llama 3.3 70B
 // Transcription: Groq Whisper (see whisper-service.js)
 //
@@ -129,7 +129,7 @@ ${transcriptChunk}`;
 async function generateNotes(transcript, dbMeetings = []) {
   const ctx = buildContext('NOTES', { dbMeetings });
 
-  const prompt = `You are an expert meeting note-taker for PrismClaw AI. Generate comprehensive, actionable notes.
+  const prompt = `You are an expert meeting note-taker for Relio AI. Generate comprehensive, actionable notes.
 
 ${ctx ? `${ctx}\n\n` : ''}
 ## Output Format (Markdown):

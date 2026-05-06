@@ -332,7 +332,7 @@ ipcMain.handle('meeting:save', async (_event, { title, transcript, notes, dates,
         try {
           await injectCalendarEvent(calendarAuth, {
             summary: d.summary || d.title,
-            description: `Extracted by PrismClaw from: ${title}`,
+            description: `Extracted by Relio from: ${title}`,
             date: d.date,
             endDate: d.endDate,
           });
