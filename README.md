@@ -82,7 +82,7 @@ After recording stops, the system automatically:
 
 ### Real-time Context (`Ctrl+Shift+R`)
 
-- Hardcoded 30-second audio window.
+- 30-second audio window.
 - On-demand transcription + AI analysis during live meetings.
 - Shows current topic, key points, suggested questions, and sentiment.
 - 10-second cooldown prevents API spam.
