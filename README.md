@@ -1,16 +1,11 @@
 <div align="center">
 
-# 🎙️ Relio — AI Meeting Assistant
+# Relio — AI Meeting Assistant
 
 **Local-first, privacy-conscious meeting intelligence powered by free-tier AI.**
 
 Record meetings · Live transcription · Smart notes · Calendar sync · Telegram alerts
 
-[![Electron](https://img.shields.io/badge/Electron-35-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
-[![Gemini](https://img.shields.io/badge/Gemini-2.5_Flash_Lite-4285F4?logo=google&logoColor=white)](https://aistudio.google.com/)
-[![Groq](https://img.shields.io/badge/Groq-Whisper_+_Llama-F55036)](https://console.groq.com/)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-Enabled-FF6B35)](https://openclaw.ai)
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 </div>
 
