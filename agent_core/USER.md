@@ -1,21 +1,23 @@
-# USER.md - About Your Human
+# USER.md — About the User
 
-_Learn about the person you're helping. Update this as you go._
+- **Name:** Divye
+- **What to call them:** Divye
+- **Timezone:** Asia/Kolkata (IST, UTC+5:30)
+- **Platform:** Windows
 
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+## Preferences
+
+- Prefers concise, structured output — bullet points over paragraphs
+- Wants productivity ratings to be honest, not inflated
+- Uses Obsidian for knowledge management
+- Receives Telegram notifications for meeting summaries and daily digests
+- Daily digest at 8:00 AM IST
+- Pre-meeting briefs sent 1 hour before calendar events
 
 ## Context
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
-
-## Related
-
-- [Agent workspace](/concepts/agent-workspace)
+- Building Relio as a comprehensive AI meeting assistant
+- Values local-first, privacy-conscious architecture
+- Uses free-tier APIs exclusively (Gemini, Groq, Telegram, Google Calendar)
+- Team: Team Relio
+- GitHub: KrabsBucket/Relio

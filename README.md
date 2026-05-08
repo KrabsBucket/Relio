@@ -68,21 +68,25 @@ The workflow is hotkey-driven:
 │  └────────┬────────┘    └─────────────┬──────────────┘  │
 │           │                           │                  │
 │  ┌────────▼────────┐    ┌─────────────▼──────────────┐  │
-│  │ Groq Whisper     │    │ Context Engine              │  │
-│  │ Transcription    │    │ Identity + Vault + History   │  │
+│  │ Groq Whisper     │    │ Context Engine (MD-based)   │  │
+│  │ Transcription    │    │  Reads: SOUL.md, USER.md,   │  │
+│  │                  │    │  IDENTITY.md + vault/*.md    │  │
 │  └────────┬────────┘    └─────────────┬──────────────┘  │
 │           │                           │                  │
 │  ┌────────▼───────────────────────────▼──────────────┐  │
 │  │              Post-Meeting Pipeline                 │  │
-│  │  Google Calendar ← Dates → Obsidian Vault          │  │
-│  │  SQLite (sql.js) ← History → Telegram Bot          │  │
+│  │  Google Calendar ← Dates → Obsidian Vault (*.md)   │  │
+│  │  SQLite (records only) ←──→ Telegram Bot           │  │
 │  └───────────────────────────────────────────────────┘  │
 │                                                         │
 ├─────────────────────────────────────────────────────────┤
-│  🦞 OpenClaw Agent (agent_core/)                        │
-│  Autonomous assistant with memory, heartbeats, skills   │
+│  🦞 OpenClaw Agent Context (agent_core/)                │
+│  SOUL.md · IDENTITY.md · USER.md · HEARTBEAT.md         │
+│  Markdown-first context — the AI reads these, not SQL   │
 └─────────────────────────────────────────────────────────┘
 ```
+
+> **Context is markdown-first.** The AI builds its understanding from `agent_core/*.md` files (personality, user profile, environment) and `vault/*.md` files (meeting notes, skills, projects). SQLite stores meeting records for persistence and stats — it is **not** the context system.
 
 All AI calls go through `safeGenerate()` which tries Gemini first and automatically falls back to Groq Llama on 429/503 errors. Transcription uses Groq Whisper as primary with Gemini STT as fallback.
 
@@ -306,24 +310,23 @@ npm install -g openclaw@latest
 
 ### Relio's Agent Workspace
 
-The `agent_core/` directory contains OpenClaw configuration files that define how the agent interacts with your Relio workspace:
+The `agent_core/` directory contains OpenClaw configuration files that are **pre-configured for Relio**:
 
 | File | Purpose |
 | --- | --- |
-| `AGENTS.md` | Workspace rules, memory management, red lines, and behavior guidelines |
-| `SOUL.md` | Agent personality, core values, and communication style |
-| `IDENTITY.md` | Agent name, creature type, vibe, and emoji (fill in during first conversation) |
-| `USER.md` | Your name, timezone, and preferences |
-| `TOOLS.md` | Local environment notes (device names, SSH hosts, TTS preferences) |
-| `BOOTSTRAP.md` | First-run onboarding script (auto-deleted after setup) |
-| `HEARTBEAT.md` | Periodic task checklist for proactive behavior |
+| `AGENTS.md` | Workspace rules, defining the MD-first context engine and token budgets |
+| `SOUL.md` | Relio's personality, core truths, and behavioral guidelines |
+| `IDENTITY.md` | Relio's identity, capabilities, and context sources |
+| `USER.md` | Your profile, timezone, and preferences |
+| `TOOLS.md` | Environment config (Gemini, Groq, Telegram, audio settings) |
+| `HEARTBEAT.md` | Scheduled proactive tasks (pre-meeting briefs, daily digest) |
 
 ### Customizing the Agent
 
-After onboarding, talk to your OpenClaw agent to personalize it:
-- **Give it a name** and personality by updating `IDENTITY.md`
+While the agent is pre-configured, you can personalize it further:
 - **Set your preferences** in `USER.md` (timezone, how you like to be addressed)
-- **Define boundaries** in `SOUL.md` (communication style, what it can do autonomously)
+- **Adjust boundaries** in `SOUL.md` (communication style, what it can do autonomously)
+- **Tweak environment** in `TOOLS.md` (change models or integrations)
 - **Add skills** from [ClawHub](https://clawhub.ai) or let the agent build its own
 
 ### Updating OpenClaw
